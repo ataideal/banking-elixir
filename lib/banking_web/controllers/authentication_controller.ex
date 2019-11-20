@@ -10,8 +10,8 @@ defmodule BankingWeb.AuthenticationController do
     |> login_reply(conn)
   end
 
-  def signup(conn, %{"user" => user) do
-    with %User{} -> UserManager.create_user(user) do
+  def signup(conn, %{"user" => user}) do
+    with %User{} = user <- UserManager.create_user(user) do
       conn
       |> put_status(:created)
       |> render("user.json", user: user)
