@@ -49,8 +49,13 @@ config :phoenix, :plug_init_mode, :runtime
 
 # Configure your database
 config :banking, Banking.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "d0zero",
+  password: "",
   database: "banking_dev",
   hostname: "localhost",
   pool_size: 10
+
+
+config :banking, Banking.Guardian,
+  issuer: "banking",
+  secret_key: "LQwt8/s6glDSHatBYxI+BzNX/9CYtllOdQ2CLxVmK2Bne1vvRye8gUwQuMJWwXO/"

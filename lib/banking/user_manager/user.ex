@@ -6,6 +6,7 @@ defmodule Banking.UserManager.User do
     field :balance, :float
     field :password, :string
     field :username, :string
+    field :email, :string
 
     timestamps()
   end
@@ -13,7 +14,7 @@ defmodule Banking.UserManager.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:username, :password, :balance])
-    |> validate_required([:username, :password, :balance])
+    |> cast(attrs, [:username, :password, :email, :balance])
+    |> validate_required([:username, :password, :email])
   end
 end

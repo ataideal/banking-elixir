@@ -101,4 +101,38 @@ defmodule Banking.UserManager do
   def change_user(%User{} = user) do
     User.changeset(user, %{})
   end
+
+
+  def get_user_by_username(username) do
+    Repo.get_by(User, username: username)
+  end
+
+  @doc """
+  Authenticate a User.
+
+  ## Examples
+
+      iex> authenticate_user(username, password)
+      {:ok, %User{}, token}
+
+      iex> authenticate_user(username, password)
+      {:error, reason}
+
+  """
+
+  def authenticate_user(username, password) do
+    with %User{} = user <- get_user_by_username(username) do # Get user by username
+      # TODO: Verify encripted password
+      case password == user.password do # Check if password is correct
+        true ->
+          {:ok, token, _} = Banking.Guardian.encode_and_sign(user) # Yes, return the access token
+          {:ok, token, user} # Return token and user after generate token
+        false ->
+          {:error, :unauthorized} # No, return an error
+      end
+    else
+      nil ->
+        {:error, :unauthorized} # Return error if username not found
+    end
+  end
 end
