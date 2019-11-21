@@ -3,6 +3,8 @@ defmodule BankingWeb.AuthenticationController do
 
   alias Banking.UserManager
   alias Banking.UserManager.User
+  alias BankingWeb.UserView
+
   action_fallback BankingWeb.FallbackController
 
   def login(conn, %{"username" => username, "password" => password}) do
@@ -11,9 +13,10 @@ defmodule BankingWeb.AuthenticationController do
   end
 
   def signup(conn, %{"user" => user}) do
-    with %User{} = user <- UserManager.create_user(user) do
+    with {:ok, %User{} = user} <- UserManager.create_user(user) do
       conn
       |> put_status(:created)
+      |> put_view(UserView)
       |> render("user.json", user: user)
     end
   end
@@ -28,6 +31,7 @@ defmodule BankingWeb.AuthenticationController do
   def login_reply({:error, _reason}, conn) do
     conn
     |> put_status(:unauthorized)
-    |> render("error.json", error: "Can not login with these credentials")
+    |> put_view(BankingWeb.ErrorView)
+    |> render(:"401", msg: "Can not login with these credentials")
   end
 end

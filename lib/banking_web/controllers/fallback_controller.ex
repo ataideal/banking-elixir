@@ -9,8 +9,8 @@ defmodule BankingWeb.FallbackController do
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     conn
     |> put_status(:unprocessable_entity)
-    |> put_view(BankingWeb.ChangesetView)
-    |> render("error.json", changeset: changeset)
+    |> put_view(BankingWeb.ErrorView)
+    |> render(:"422", changeset: changeset)
   end
 
   def call(conn, {:error, :not_found}) do
@@ -20,9 +20,9 @@ defmodule BankingWeb.FallbackController do
     |> render(:"404")
   end
 
-  def call(conn, error) do
-    IO.inspect error
+  def call(conn, _) do
     conn
-    |> render(:"400")
+    |> put_view(BankingWeb.ErrorView)
+    |> render(:"500")
   end
 end

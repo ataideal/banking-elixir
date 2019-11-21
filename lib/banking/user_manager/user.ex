@@ -3,7 +3,7 @@ defmodule Banking.UserManager.User do
   import Ecto.Changeset
 
   schema "users" do
-    field :balance, :float
+    field :balance, :float, default: 1.0e3
     field :password, :string
     field :username, :string
     field :email, :string
@@ -14,7 +14,9 @@ defmodule Banking.UserManager.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:username, :password, :email, :balance])
+    |> cast(attrs, [:username, :password, :email])
     |> validate_required([:username, :password, :email])
+    |> unique_constraint(:username)
   end
+
 end

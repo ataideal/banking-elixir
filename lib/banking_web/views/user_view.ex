@@ -8,11 +8,4 @@ defmodule BankingWeb.UserView do
       balance: user.balance
     }
   end
-
-  def render("user_with_token.json", %{user: user, token: token}) do
-    %{
-      user: render("user.json", %{user: user}),
-      token: token
-    }
-  end
 end
