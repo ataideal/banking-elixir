@@ -15,6 +15,10 @@ defmodule BankingWeb.ErrorView do
     %{errors: msg}
   end
 
+  def render("400.json", _) do
+    %{errors: "Bad Request"}
+  end
+
   def translate_errors(changeset) do
     Ecto.Changeset.traverse_errors(changeset, &translate_error/1)
   end

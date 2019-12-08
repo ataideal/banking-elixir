@@ -23,6 +23,7 @@ defmodule BankingWeb.FallbackController do
   def call(conn, _) do
     conn
     |> put_view(BankingWeb.ErrorView)
+    |> put_status(500)
     |> render(:"500")
   end
 end

@@ -3,7 +3,6 @@ defmodule BankingWeb.AuthenticationView do
   alias BankingWeb.UserView
 
   def render("user_with_token.json", %{user: user, token: token}) do
-    IO.inspect user
     %{
       user: render_one(user, UserView, "user.json"),
       token: token

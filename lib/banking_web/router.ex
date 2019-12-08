@@ -4,8 +4,9 @@ defmodule BankingWeb.Router do
   pipeline :api do
     plug :accepts, ["json"]
   end
-  pipeline :ensure_auth do
-    plug Guardian.Plug.EnsureAuthenticated
+
+  pipeline :authenticated do
+    plug Banking.AuthPipeline
   end
 
   scope "/api/auth", BankingWeb do
@@ -15,6 +16,9 @@ defmodule BankingWeb.Router do
   end
 
   scope "/api", BankingWeb do
-    pipe_through [:api, :ensure_auth]
+    pipe_through [:api, :authenticated]
+    post "/withdraw", TransactionController, :withdraw
+    post "/transfer", TransactionController, :transfer
+    get "/backoffice", BackofficeController, :backoffice
   end
 end

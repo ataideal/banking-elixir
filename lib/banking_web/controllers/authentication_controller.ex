@@ -21,7 +21,6 @@ defmodule BankingWeb.AuthenticationController do
     end
   end
 
-
   def login_reply({:ok, token, %User{} = user}, conn) do
     conn
     |> put_status(:ok)

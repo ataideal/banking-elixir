@@ -50,7 +50,7 @@ defmodule Banking.UserManager do
 
   """
   def create_user(attrs \\ %{}) do
-    changeset = %User{}
+    %User{}
     |> User.changeset(attrs)
     |> Repo.insert()
   end
@@ -105,6 +105,10 @@ defmodule Banking.UserManager do
 
   def get_user_by_username(username) do
     Repo.get_by(User, username: username)
+  end
+
+  def get_user_by_username!(username) do
+    Repo.get_by!(User, username: username)
   end
 
   @doc """
