@@ -6,7 +6,8 @@ defmodule BankingWeb.UserView do
     %{
       id: user.id,
       username: user.username,
-      balance: user.balance
+      balance: user.balance,
+      email: user.email
     }
   end
 end

@@ -6,9 +6,9 @@ defmodule Banking.UserManagerTest do
   describe "users" do
     alias Banking.UserManager.User
 
-    @valid_attrs %{balance: 120.5, password: "some password", username: "some username"}
-    @update_attrs %{balance: 456.7, password: "some updated password", username: "some updated username"}
-    @invalid_attrs %{balance: nil, password: nil, username: nil}
+    @valid_attrs %{email: "some@email.com", password: "some password", username: "some username"}
+    @update_attrs %{balance: 456.7, email: "some_updated@email.com", password: "some updated password", username: "some updated username"}
+    @invalid_attrs %{balance: -1, email: "some@email.com", password: "some password", username: "some username"}
 
     def user_fixture(attrs \\ %{}) do
       {:ok, user} =
@@ -31,7 +31,8 @@ defmodule Banking.UserManagerTest do
 
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = UserManager.create_user(@valid_attrs)
-      assert user.balance == 120.5
+      assert user.balance == 1.0e3
+      assert user.email == "some@email.com"
       assert user.password == "some password"
       assert user.username == "some username"
     end
@@ -44,6 +45,7 @@ defmodule Banking.UserManagerTest do
       user = user_fixture()
       assert {:ok, %User{} = user} = UserManager.update_user(user, @update_attrs)
       assert user.balance == 456.7
+      assert user.email == "some_updated@email.com"
       assert user.password == "some updated password"
       assert user.username == "some updated username"
     end

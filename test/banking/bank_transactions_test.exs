@@ -2,13 +2,16 @@ defmodule Banking.BankTransactionsTest do
   use Banking.DataCase
 
   alias Banking.BankTransactions
+  alias Banking.UserManager
 
   describe "transactions" do
     alias Banking.BankTransactions.Transaction
 
-    @valid_attrs %{transaction_type: 42, value: 120.5}
-    @update_attrs %{transaction_type: 43, value: 456.7}
-    @invalid_attrs %{transaction_type: nil, value: nil}
+    @valid_attrs %{transaction_type: 0, value: 120.5}
+    @invalid_attrs %{transaction_type: 10, value: nil}
+
+    @valid_attrs_user %{email: "some@email.com", password: "some password", username: "some username"}
+
 
     def transaction_fixture(attrs \\ %{}) do
       {:ok, transaction} =
@@ -19,47 +22,61 @@ defmodule Banking.BankTransactionsTest do
       transaction
     end
 
-    test "list_transactions/0 returns all transactions" do
-      transaction = transaction_fixture()
-      assert BankTransactions.list_transactions() == [transaction]
+    def user_fixture(attrs \\ %{}) do
+      {:ok, user} =
+        attrs
+        |> Enum.into(@valid_attrs_user)
+        |> UserManager.create_user()
+
+      user
     end
 
     test "get_transaction!/1 returns the transaction with given id" do
-      transaction = transaction_fixture()
+      user_from = user_fixture(%{username: "user_from"})
+      transaction = transaction_fixture(%{user_from_id: user_from.id})
       assert BankTransactions.get_transaction!(transaction.id) == transaction
     end
 
-    test "create_transaction/1 with valid data creates a transaction" do
-      assert {:ok, %Transaction{} = transaction} = BankTransactions.create_transaction(@valid_attrs)
-      assert transaction.transaction_type == 42
+    test "create_transaction/1 withdraw transaction_type" do
+      user_from = user_fixture(%{username: "user_from"})
+      assert {:ok, %Transaction{} = transaction} =
+        Enum.into(%{user_from_id: user_from.id}, @valid_attrs)
+        |> BankTransactions.create_transaction()
+
+      assert transaction.transaction_type == 0
       assert transaction.value == 120.5
+      assert transaction.user_from.balance == user_from.balance - transaction.value
+    end
+
+    test "create_transaction/1 transfer transaction_type" do
+      user_from = user_fixture(%{username: "user_from"})
+      user_to = user_fixture(%{username: "user_to"})
+      assert {:ok, %Transaction{} = transaction} =
+        Enum.into(%{user_from_id: user_from.id,
+                    user_to_id: user_to.id,
+                    transaction_type: 1}, @valid_attrs)
+        |> BankTransactions.create_transaction()
+
+      assert transaction.transaction_type == 1
+      assert transaction.value == 120.5
+      assert transaction.user_from.balance == user_from.balance - transaction.value
+      assert transaction.user_to.balance == user_to.balance + transaction.value
+    end
+
+    test "create_transaction/1 withdraw transaction_type without enough money" do
+      user_from = user_fixture(%{username: "user_from"})
+      assert {:error, "User without funds"} =
+        Enum.into(%{user_from_id: user_from.id, value: 1000.1}, @valid_attrs)
+        |> BankTransactions.create_transaction()
     end
 
     test "create_transaction/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = BankTransactions.create_transaction(@invalid_attrs)
-    end
-
-    test "update_transaction/2 with valid data updates the transaction" do
-      transaction = transaction_fixture()
-      assert {:ok, %Transaction{} = transaction} = BankTransactions.update_transaction(transaction, @update_attrs)
-      assert transaction.transaction_type == 43
-      assert transaction.value == 456.7
-    end
-
-    test "update_transaction/2 with invalid data returns error changeset" do
-      transaction = transaction_fixture()
-      assert {:error, %Ecto.Changeset{}} = BankTransactions.update_transaction(transaction, @invalid_attrs)
-      assert transaction == BankTransactions.get_transaction!(transaction.id)
-    end
-
-    test "delete_transaction/1 deletes the transaction" do
-      transaction = transaction_fixture()
-      assert {:ok, %Transaction{}} = BankTransactions.delete_transaction(transaction)
-      assert_raise Ecto.NoResultsError, fn -> BankTransactions.get_transaction!(transaction.id) end
+      assert {:error, _} = BankTransactions.create_transaction(@invalid_attrs)
     end
 
     test "change_transaction/1 returns a transaction changeset" do
-      transaction = transaction_fixture()
+      user_from = user_fixture(%{username: "user_from"})
+      transaction = transaction_fixture(%{user_from_id: user_from.id})
       assert %Ecto.Changeset{} = BankTransactions.change_transaction(transaction)
     end
   end

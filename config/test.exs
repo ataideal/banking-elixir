@@ -11,8 +11,8 @@ config :logger, level: :warn
 
 # Configure your database
 config :banking, Banking.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "d0zero",
+  password: "",
   database: "banking_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox

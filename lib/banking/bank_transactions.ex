@@ -11,19 +11,6 @@ defmodule Banking.BankTransactions do
   alias Banking.UserManager
 
   @doc """
-  Returns the list of transactions.
-
-  ## Examples
-
-      iex> list_transactions()
-      [%Transaction{}, ...]
-
-  """
-  def list_transactions do
-    Repo.all(Transaction)
-  end
-
-  @doc """
   Gets a single transaction.
 
   Raises `Ecto.NoResultsError` if the Transaction does not exist.
@@ -37,7 +24,7 @@ defmodule Banking.BankTransactions do
       ** (Ecto.NoResultsError)
 
   """
-  def get_transaction!(id), do: Repo.get!(Transaction, id)
+  def get_transaction!(id), do: Repo.get!(Transaction, id) |> Repo.preload([:user_from, :user_to])
 
   @doc """
   Creates a transaction.
@@ -90,40 +77,6 @@ defmodule Banking.BankTransactions do
         String.replace(acc, "%{#{key}}", to_string(value))
       end)
     end)
-  end
-
-  @doc """
-  Updates a transaction.
-
-  ## Examples
-
-      iex> update_transaction(transaction, %{field: new_value})
-      {:ok, %Transaction{}}
-
-      iex> update_transaction(transaction, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_transaction(%Transaction{} = transaction, attrs) do
-    transaction
-    |> Transaction.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a Transaction.
-
-  ## Examples
-
-      iex> delete_transaction(transaction)
-      {:ok, %Transaction{}}
-
-      iex> delete_transaction(transaction)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_transaction(%Transaction{} = transaction) do
-    Repo.delete(transaction)
   end
 
   @doc """

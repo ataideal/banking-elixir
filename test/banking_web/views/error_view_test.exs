@@ -10,6 +10,6 @@ defmodule BankingWeb.ErrorViewTest do
 
   test "renders 500.json" do
     assert render(BankingWeb.ErrorView, "500.json", []) ==
-             %{errors: %{detail: "Internal Server Error"}}
+             %{errors: "Internal Server Error"}
   end
 end
