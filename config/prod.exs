@@ -70,4 +70,17 @@ config :logger, level: :info
 # Finally import the config/prod.secret.exs which should be versioned
 # separately.
 
-import_config "prod.secret.exs"
+config :banking, BankingWeb.Endpoint,
+  secret_key_base: System.get_env("SECRET_KEY_BASE")
+
+# Configure your database
+config :banking, Banking.Repo,
+  ssl: true,
+  url: database_url,
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
+
+config :banking, Banking.Guardian,
+  issuer: "banking",
+  secret_key: System.get_env("GUARDIAN_SECRET_KEY")
+
+# import_config "prod.secret.exs"
