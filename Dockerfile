@@ -15,6 +15,9 @@ RUN mix local.hex --force
 # Force install rebar
 RUN mix local.rebar --force
 
+# Force install rebar
+RUN mix deps.get
+
 # Compile the project
 RUN mix do compile
 
