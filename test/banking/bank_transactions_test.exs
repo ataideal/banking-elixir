@@ -8,7 +8,7 @@ defmodule Banking.BankTransactionsTest do
     alias Banking.BankTransactions.Transaction
 
     @valid_attrs %{transaction_type: 0, value: 120.5}
-    @invalid_attrs %{transaction_type: 10, value: nil}
+    @invalid_attrs %{transaction_type: 10, value: -1}
 
     @valid_attrs_user %{email: "some@email.com", password: "some password", username: "some username"}
 
@@ -71,7 +71,10 @@ defmodule Banking.BankTransactionsTest do
     end
 
     test "create_transaction/1 with invalid data returns error changeset" do
-      assert {:error, _} = BankTransactions.create_transaction(@invalid_attrs)
+      user_from = user_fixture(%{username: "user_from"})
+      assert {:error, _} =
+          Enum.into(%{user_from_id: user_from.id}, @invalid_attrs)
+          |> BankTransactions.create_transaction()
     end
 
     test "change_transaction/1 returns a transaction changeset" do

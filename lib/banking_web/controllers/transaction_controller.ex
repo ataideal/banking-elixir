@@ -5,7 +5,6 @@ defmodule BankingWeb.TransactionController do
   alias Banking.UserManager.User
   alias Banking.BankTransactions
   alias Banking.BankTransactions.Transaction
-  alias BankingWeb.UserView
   alias BankingWeb.TransactionView
 
   action_fallback BankingWeb.FallbackController

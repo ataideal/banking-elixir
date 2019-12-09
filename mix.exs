@@ -10,7 +10,9 @@ defmodule Banking.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [coveralls: :test]
     ]
   end
 
@@ -41,7 +43,8 @@ defmodule Banking.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:guardian, "~> 2.0"} # An authentication library for use with Elixir applications.
+      {:guardian, "~> 2.0"}, # An authentication library for use with Elixir applications.
+      {:excoveralls, "~> 0.10", only: :test} # Coverage report tool for Elixir with coveralls.io integration.
     ]
   end
 
