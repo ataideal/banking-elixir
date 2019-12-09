@@ -66,5 +66,24 @@ defmodule Banking.UserManagerTest do
       user = user_fixture()
       assert %Ecto.Changeset{} = UserManager.change_user(user)
     end
+
+    test "authenticate_user/2 authenticate with valid credentials" do
+      user = user_fixture()
+      assert {:ok, token, user_authenticated} = UserManager.authenticate_user(user.username, user.password)
+      assert user_authenticated.username == user.username
+      assert user_authenticated.email == user.email
+      assert user_authenticated.balance == user.balance
+    end
+
+    test "authenticate_user/2 authenticate with invalid username" do
+      user = user_fixture()
+      assert {:error, :unauthorized} = UserManager.authenticate_user("invalid", user.password)
+    end
+
+    test "authenticate_user/2 authenticate with invalid password" do
+      user = user_fixture()
+      assert {:error, :unauthorized} = UserManager.authenticate_user(user.username, "invalid")
+    end
+
   end
 end

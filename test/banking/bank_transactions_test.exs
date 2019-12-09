@@ -82,5 +82,48 @@ defmodule Banking.BankTransactionsTest do
       transaction = transaction_fixture(%{user_from_id: user_from.id})
       assert %Ecto.Changeset{} = BankTransactions.change_transaction(transaction)
     end
+
+    test "transactions_by_group/1 year backoffice" do
+      user_from = user_fixture(%{username: "user_from"})
+      transaction = transaction_fixture(%{user_from_id: user_from.id})
+      transactions_by_year = BankTransactions.transactions_by_group("year")
+      assert length(transactions_by_year) == 1
+      first_entry = List.first(transactions_by_year)
+      assert first_entry.year == transaction.inserted_at.year
+      assert first_entry.total_transactions == transaction.value
+    end
+
+    test "transactions_by_group/1 month backoffice" do
+      user_from = user_fixture(%{username: "user_from"})
+      transaction = transaction_fixture(%{user_from_id: user_from.id})
+      transactions_by_month = BankTransactions.transactions_by_group("month")
+      assert length(transactions_by_month) == 1
+      first_entry = List.first(transactions_by_month)
+      assert first_entry.month == transaction.inserted_at.month
+      assert first_entry.year == transaction.inserted_at.year
+      assert first_entry.total_transactions == transaction.value
+    end
+
+    test "transactions_by_group/1 day backoffice" do
+      user_from = user_fixture(%{username: "user_from"})
+      transaction = transaction_fixture(%{user_from_id: user_from.id})
+      transactions_by_day = BankTransactions.transactions_by_group("day")
+      assert length(transactions_by_day) == 1
+      first_entry = List.first(transactions_by_day)
+      assert first_entry.day == transaction.inserted_at.day
+      assert first_entry.month == transaction.inserted_at.month
+      assert first_entry.year == transaction.inserted_at.year
+      assert first_entry.total_transactions == transaction.value
+    end
+
+    test "transactions_by_group/1 alltime backoffice" do
+      user_from = user_fixture(%{username: "user_from"})
+      transaction = transaction_fixture(%{user_from_id: user_from.id})
+      transactions_all_time = BankTransactions.transactions_by_group("")
+      assert length(transactions_all_time) == 1
+      first_entry = List.first(transactions_all_time)
+      assert first_entry.total_transactions == transaction.value
+    end
+
   end
 end
