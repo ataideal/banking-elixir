@@ -27,7 +27,8 @@ defmodule Banking.BankTransactions do
   def get_transaction!(id), do: Repo.get!(Transaction, id) |> Repo.preload([:user_from, :user_to])
 
   @doc """
-  Creates a transaction.
+  Creates a transaction and execute the transaction inside a Repo.Transaction,
+  if some operation went wrong, revert all commits on database.
 
   ## Examples
 
@@ -35,7 +36,7 @@ defmodule Banking.BankTransactions do
       {:ok, %Transaction{}}
 
       iex> create_transaction(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
+      {:error, errors}
 
   """
 
@@ -54,7 +55,10 @@ defmodule Banking.BankTransactions do
     end)
   end
 
-  defp withdraw_money(transaction) do
+  @doc """
+  Receive a transaction and execute a withdraw, updating user balance.
+  """
+  def withdraw_money(transaction) do
     user = transaction.user_from
     new_balance = user.balance - transaction.value
     with {:error, _} <- UserManager.update_user(user, %{balance: new_balance }) do
@@ -62,7 +66,10 @@ defmodule Banking.BankTransactions do
     end
   end
 
-  defp transfer_money(transaction) do
+  @doc """
+  Receive a transaction and execute a transfer, updating users balances.
+  """
+  def transfer_money(transaction) do
     withdraw_money(transaction)
     user = transaction.user_to
     new_balance = user.balance + transaction.value
@@ -71,6 +78,9 @@ defmodule Banking.BankTransactions do
     end
   end
 
+  @doc """
+  Traverse transaction changeset errors.
+  """
   def transaction_errors(changeset) do
     Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
       Enum.reduce(opts, msg, fn {key, value}, acc ->
@@ -92,12 +102,25 @@ defmodule Banking.BankTransactions do
     Transaction.changeset(transaction, %{})
   end
 
+  @doc """
+  Query transactions backoffice by group
+  """
   def transactions_by_group("month"), do: Repo.all(transactions_by_month())
   def transactions_by_group("year"), do: Repo.all(transactions_by_year())
   def transactions_by_group("day"), do: Repo.all(transactions_by_day())
   def transactions_by_group(_), do: Repo.all(transactions_all_time())
 
-  defp transactions_by_month() do
+  @doc """
+  Query transactions backoffice by month
+  ## Examples
+
+      iex> transactions_by_group("month")
+      [
+        %{month: 12.0, total_transactions: 100.0, year: 2015.0},
+        %{month: 12.0, total_transactions: 100.0, year: 2016.0}
+      ]
+  """
+  def transactions_by_month() do
     from t in Transaction,
     select: %{total_transactions: sum(t.value),
               year: fragment("date_part('year', ?)",t.inserted_at),
@@ -108,7 +131,17 @@ defmodule Banking.BankTransactions do
               fragment("date_part('month', ?) ASC", t.inserted_at)]
   end
 
-  defp transactions_by_year() do
+  @doc """
+  Query transactions backoffice by month
+  ## Examples
+
+      iex> transactions_by_group("year")
+      [
+        %{total_transactions: 100.0, year: 2015.0},
+        %{total_transactions: 100.0, year: 2016.0}
+      ]
+  """
+  def transactions_by_year() do
     from t in Transaction,
     select: %{total_transactions: sum(t.value),
               year: fragment("date_part('year', ?)",t.inserted_at)},
@@ -116,7 +149,17 @@ defmodule Banking.BankTransactions do
     order_by: [fragment("date_part('year', ?) ASC", t.inserted_at)]
   end
 
-  defp transactions_by_day() do
+  @doc """
+  Query transactions backoffice by day
+  ## Examples
+
+      iex> transactions_by_group("day")
+      [
+        %{total_transactions: 100.0, year: 2015.0, month: 1, day: 5},
+        %{total_transactions: 100.0, year: 2016.0, month: 5, day: 10}
+      ]
+  """
+  def transactions_by_day() do
     from t in Transaction,
     select: %{total_transactions: sum(t.value),
               day: fragment("date_part('day', ?)",t.inserted_at),
@@ -130,7 +173,16 @@ defmodule Banking.BankTransactions do
               fragment("date_part('day', ?) ASC", t.inserted_at)]
   end
 
-  defp transactions_all_time() do
+  @doc """
+  Query sum of transactions backoffice
+  ## Examples
+
+      iex> transactions_all_time()
+      [
+        %{total_transactions: 37201.0}
+      ]
+  """
+  def transactions_all_time() do
     from t in Transaction,
     select: %{total_transactions: sum(t.value)}
   end

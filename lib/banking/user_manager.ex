@@ -123,7 +123,6 @@ defmodule Banking.UserManager do
       {:error, reason}
 
   """
-
   def authenticate_user(username, password) do
     with %User{} = user <- get_user_by_username(username) do # Get user by username
       # TODO: Verify encripted password

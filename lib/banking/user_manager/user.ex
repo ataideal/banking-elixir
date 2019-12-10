@@ -24,7 +24,8 @@ defmodule Banking.UserManager.User do
   end
 
   def validate_balance(changeset, attrs) do
-    if (Map.has_key?(attrs, :balance) && attrs.balance < 0), do: add_error(changeset, :balance, "Can not be negative"), else: changeset
+    if (Map.has_key?(attrs, :balance) && attrs.balance < 0),
+      do: add_error(changeset, :balance, "Can not be negative"), else: changeset
   end
 
 end

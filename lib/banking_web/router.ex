@@ -9,16 +9,22 @@ defmodule BankingWeb.Router do
     plug Banking.AuthPipeline
   end
 
-  scope "/api/auth", BankingWeb do
+
+  scope "/api" do
     pipe_through :api
-    post "/login", AuthenticationController, :login
-    post "/signup", AuthenticationController, :signup
-    get "/backoffice", BackofficeController, :backoffice
+    scope "/auth", BankingWeb do
+      post "/login", AuthenticationController, :login
+      post "/signup", AuthenticationController, :signup
+    end
+
+    scope "/", BankingWeb do
+      pipe_through :authenticated
+      post "/withdraw", TransactionController, :withdraw
+      post "/transfer", TransactionController, :transfer
+    end
+
+    get "/backoffice", BankingWeb.BackofficeController, :backoffice
+
   end
 
-  scope "/api", BankingWeb do
-    pipe_through [:api, :authenticated]
-    post "/withdraw", TransactionController, :withdraw
-    post "/transfer", TransactionController, :transfer
-  end
 end
