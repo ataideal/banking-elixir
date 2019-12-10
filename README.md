@@ -193,87 +193,88 @@ Now you can use the API on [`localhost:4000`](http://localhost:4000).
     }
     ```
 
-  #### Backoffice
-    * Backoffice transactions:
-      * Endpoint: `/api/backoffice`
-      * Method: `GET`
-      * Url params:
-      ```javascript
-      group=['year','month', 'day', 'all_time']
-      ```
-      * Response(Success) `group=year`:
-      ```json
-        {
-            "total_transactions": 100,
-            "year": 2015
-        },
-        {
-            "total_transactions": 100,
-            "year": 2016
-        },
-        {
-            "total_transactions": 300,
-            "year": 2018
-        },
-        {
-            "total_transactions": 16530,
-            "year": 2019
-        }
-      ```
-      * Response(Success) `group=month`:
-      ```json
-      [
-          {
-              "month": 12,
-              "total_transactions": 100,
-              "year": 2015
-          },
+#### Backoffice  
 
-          {
-              "month": 12,
-              "total_transactions": 100,
-              "year": 2018
-          },
-          {
-              "month": 1,
-              "total_transactions": 100,
-              "year": 2019
-          },
-          {
-              "month": 12,
-              "total_transactions": 16230,
-              "year": 2019
-          }
-      ]
-      ```
-      * Response(Success) `group=day`:
-      ```json
-      [
-          {
-              "day": 7,
-              "month": 12,
-              "total_transactions": 100,
-              "year": 2015
-          },
-          {
-              "day": 7,
-              "month": 12,
-              "total_transactions": 100,
-              "year": 2016
-          },
-          {
-              "day": 7,
-              "month": 2,
-              "total_transactions": 100,
-              "year": 2018
-          }
-      ]
-      ```
-      * Response(Success) `group=all_time`:
-      ```json
-        [
-          {
-              "total_transactions": 17030
-          }
-        ]
-      ```
+   * Backoffice transactions:
+     * Endpoint: `/api/backoffice`
+     * Method: `GET`
+     * Url params:
+     ```javascript
+     group=['year','month', 'day', 'all_time']
+     ```
+     * Response(Success) `group=year`:
+     ```json
+       {
+           "total_transactions": 100,
+           "year": 2015
+       },
+       {
+           "total_transactions": 100,
+           "year": 2016
+       },
+       {
+           "total_transactions": 300,
+           "year": 2018
+       },
+       {
+           "total_transactions": 16530,
+           "year": 2019
+       }
+     ```
+     * Response(Success) `group=month`:
+     ```json
+     [
+         {
+             "month": 12,
+             "total_transactions": 100,
+             "year": 2015
+         },
+
+         {
+             "month": 12,
+             "total_transactions": 100,
+             "year": 2018
+         },
+         {
+             "month": 1,
+             "total_transactions": 100,
+             "year": 2019
+         },
+         {
+             "month": 12,
+             "total_transactions": 16230,
+             "year": 2019
+         }
+     ]
+     ```
+     * Response(Success) `group=day`:
+     ```json
+     [
+         {
+             "day": 7,
+             "month": 12,
+             "total_transactions": 100,
+             "year": 2015
+         },
+         {
+             "day": 7,
+             "month": 12,
+             "total_transactions": 100,
+             "year": 2016
+         },
+         {
+             "day": 7,
+             "month": 2,
+             "total_transactions": 100,
+             "year": 2018
+         }
+     ]
+     ```
+     * Response(Success) `group=all_time`:
+     ```json
+       [
+         {
+             "total_transactions": 17030
+         }
+       ]
+     ```
