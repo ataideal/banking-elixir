@@ -23,7 +23,7 @@ Now you can use the API on [`localhost:4000`](http://localhost:4000).
   * On your project file `prod.exs` change url host config to your url app
   * Run on project's root folder: `heroku git:remote -a your-app-name`
   * Commit your changes
-  * and then deploy it to heroku: `git heroku push your-branch:master`
+  * and then deploy it to heroku: `git push heroku your-branch:master`
   * After deploy finish, run on heroku console: `mix do ecto.create, ecto.migrate`
   * After that you server is ready to be used
 
