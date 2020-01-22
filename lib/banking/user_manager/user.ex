@@ -4,7 +4,7 @@ defmodule Banking.UserManager.User do
   alias Banking.BankTransactions.Transaction
 
   schema "users" do
-    field :balance, :float, default: 1.0e3
+    field :balance_in_cents, :integer, default: 100000
     field :password, :string
     field :username, :string
     field :email, :string
@@ -17,15 +17,26 @@ defmodule Banking.UserManager.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:username, :password, :email, :balance])
+    |> cast(attrs, [:username, :password, :email, :balance_in_cents])
     |> validate_required([:username, :password, :email])
     |> unique_constraint(:username)
     |> validate_balance(attrs)
+    |> put_password_hash()
   end
 
-  def validate_balance(changeset, attrs) do
-    if (Map.has_key?(attrs, :balance) && attrs.balance < 0),
-      do: add_error(changeset, :balance, "Can not be negative"), else: changeset
+  defp validate_balance(changeset, attrs) do
+    balance_in_cents = get_change(changeset, :balance_in_cents)
+    if balance_in_cents < 0 do
+      add_error(changeset, :balance_in_cents, "Can not be negative")
+    else
+      changeset
+    end
   end
+
+  defp put_password_hash(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
+    change(changeset, password: Argon2.hash_pwd_salt(password))
+  end
+
+  defp put_password_hash(changeset), do: changeset
 
 end

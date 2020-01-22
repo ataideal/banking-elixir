@@ -4,7 +4,7 @@ defmodule Banking.MixProject do
   def project do
     [
       app: :banking,
-      version: "0.1.0",
+      version: "0.2.0",
       elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
@@ -44,7 +44,9 @@ defmodule Banking.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:guardian, "~> 2.0"}, # An authentication library for use with Elixir applications.
-      {:excoveralls, "~> 0.10", only: :test} # Coverage report tool for Elixir with coveralls.io integration.
+      {:argon2_elixir, "~> 2.0"}, # Password Hashing
+      {:excoveralls, "~> 0.10", only: :test}, # Coverage report tool for Elixir with coveralls.io integration.
+      {:credo, "~> 1.1.0", only: [:dev, :test], runtime: false}
     ]
   end
 

@@ -7,6 +7,10 @@ defmodule BankingWeb.ErrorView do
     %{errors: "Internal Server Error"}
   end
 
+  def render("404.json", _error) do
+    %{errors: %{detail: "Not Found"}}
+  end
+
   def render("422.json", %{changeset: changeset}) do
     %{errors: translate_errors(changeset)}
   end

@@ -1,5 +1,14 @@
 {
   "coverage_options": {
     "treat_no_relevant_lines_as_covered": true
-  }
+  },
+  "skip_files": [
+    "lib/banking_web.ex",
+    "test/support/*",
+    "lib/banking_web/views/error_view.ex",
+    "lib/banking_web/views/error_helpers.ex",
+    "lib/banking_web/controllers/fallback_controller.ex",
+    "lib/banking/repo.ex",
+    "lib/banking/application.ex"
+  ]
 }

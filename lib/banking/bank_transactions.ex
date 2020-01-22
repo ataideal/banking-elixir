@@ -40,6 +40,10 @@ defmodule Banking.BankTransactions do
 
   """
 
+  def get_last_transaction() do
+    from(t in Transaction, limit: 1, order_by: [desc: t.id]) |> Repo.one
+  end
+
   def create_transaction(attrs \\ %{}) do
     Repo.transaction(fn ->
       with {:ok, transaction} <- %Transaction{}|> Transaction.changeset(attrs)|> Repo.insert() do
@@ -55,27 +59,19 @@ defmodule Banking.BankTransactions do
     end)
   end
 
-  @doc """
-  Receive a transaction and execute a withdraw, updating user balance.
-  """
-  def withdraw_money(transaction) do
+  defp withdraw_money(transaction) do
     user = transaction.user_from
-    new_balance = user.balance - transaction.value
-    with {:error, _} <- UserManager.update_user(user, %{balance: new_balance }) do
+    new_balance = user.balance_in_cents - transaction.value_in_cents
+    with {:error, _} <- UserManager.update_user(user, %{balance_in_cents: new_balance }) do
       Repo.rollback("User without funds")
     end
   end
 
-  @doc """
-  Receive a transaction and execute a transfer, updating users balances.
-  """
-  def transfer_money(transaction) do
+  defp transfer_money(transaction) do
     withdraw_money(transaction)
     user = transaction.user_to
-    new_balance = user.balance + transaction.value
-    with {:error, _} <- UserManager.update_user(user, %{balance: new_balance}) do
-      Repo.rollback("User can not receive funds")
-    end
+    new_balance = user.balance_in_cents + transaction.value_in_cents
+    UserManager.update_user(user, %{balance_in_cents: new_balance})
   end
 
   @doc """
@@ -100,91 +96,6 @@ defmodule Banking.BankTransactions do
   """
   def change_transaction(%Transaction{} = transaction) do
     Transaction.changeset(transaction, %{})
-  end
-
-  @doc """
-  Query transactions backoffice by group
-  """
-  def transactions_by_group("month"), do: Repo.all(transactions_by_month())
-  def transactions_by_group("year"), do: Repo.all(transactions_by_year())
-  def transactions_by_group("day"), do: Repo.all(transactions_by_day())
-  def transactions_by_group(_), do: Repo.all(transactions_all_time())
-
-  @doc """
-  Query transactions backoffice by month
-  ## Examples
-
-      iex> transactions_by_group("month")
-      [
-        %{month: 12.0, total_transactions: 100.0, year: 2015.0},
-        %{month: 12.0, total_transactions: 100.0, year: 2016.0}
-      ]
-  """
-  def transactions_by_month() do
-    from t in Transaction,
-    select: %{total_transactions: sum(t.value),
-              year: fragment("date_part('year', ?)",t.inserted_at),
-              month: fragment("date_part('month', ?)",t.inserted_at)},
-    group_by: [fragment("date_part('month', ?)", t.inserted_at),
-              fragment("date_part('year', ?)", t.inserted_at)],
-    order_by: [fragment("date_part('year', ?) ASC", t.inserted_at),
-              fragment("date_part('month', ?) ASC", t.inserted_at)]
-  end
-
-  @doc """
-  Query transactions backoffice by month
-  ## Examples
-
-      iex> transactions_by_group("year")
-      [
-        %{total_transactions: 100.0, year: 2015.0},
-        %{total_transactions: 100.0, year: 2016.0}
-      ]
-  """
-  def transactions_by_year() do
-    from t in Transaction,
-    select: %{total_transactions: sum(t.value),
-              year: fragment("date_part('year', ?)",t.inserted_at)},
-    group_by: [fragment("date_part('year', ?)", t.inserted_at)],
-    order_by: [fragment("date_part('year', ?) ASC", t.inserted_at)]
-  end
-
-  @doc """
-  Query transactions backoffice by day
-  ## Examples
-
-      iex> transactions_by_group("day")
-      [
-        %{total_transactions: 100.0, year: 2015.0, month: 1, day: 5},
-        %{total_transactions: 100.0, year: 2016.0, month: 5, day: 10}
-      ]
-  """
-  def transactions_by_day() do
-    from t in Transaction,
-    select: %{total_transactions: sum(t.value),
-              day: fragment("date_part('day', ?)",t.inserted_at),
-              month: fragment("date_part('month', ?)",t.inserted_at),
-              year: fragment("date_part('year', ?)",t.inserted_at)},
-    group_by: [fragment("date_part('day', ?)", t.inserted_at),
-              fragment("date_part('month', ?)", t.inserted_at),
-              fragment("date_part('year', ?)", t.inserted_at)],
-    order_by: [fragment("date_part('year', ?) ASC", t.inserted_at),
-              fragment("date_part('month', ?) ASC", t.inserted_at),
-              fragment("date_part('day', ?) ASC", t.inserted_at)]
-  end
-
-  @doc """
-  Query sum of transactions backoffice
-  ## Examples
-
-      iex> transactions_all_time()
-      [
-        %{total_transactions: 37201.0}
-      ]
-  """
-  def transactions_all_time() do
-    from t in Transaction,
-    select: %{total_transactions: sum(t.value)}
   end
 
 end

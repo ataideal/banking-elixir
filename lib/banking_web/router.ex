@@ -21,10 +21,8 @@ defmodule BankingWeb.Router do
       pipe_through :authenticated
       post "/withdraw", TransactionController, :withdraw
       post "/transfer", TransactionController, :transfer
+      get "/backoffice", BackofficeController, :backoffice
     end
-
-    get "/backoffice", BankingWeb.BackofficeController, :backoffice
-
   end
 
 end

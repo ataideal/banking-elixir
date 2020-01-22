@@ -5,7 +5,7 @@ defmodule Banking.BankTransactions.Transaction do
 
   schema "transactions" do
     field :transaction_type, :integer
-    field :value, :float
+    field :value_in_cents, :integer
     belongs_to :user_from, User
     belongs_to :user_to, User
 
@@ -15,16 +15,16 @@ defmodule Banking.BankTransactions.Transaction do
   @doc false
   def changeset(transaction, attrs) do
     transaction
-    |> cast(attrs, [:value, :transaction_type, :user_from_id, :user_to_id])
-    |> validate_required([:value, :transaction_type, :user_from_id])
+    |> cast(attrs, [:value_in_cents, :transaction_type, :user_from_id, :user_to_id])
+    |> validate_required([:value_in_cents, :transaction_type, :user_from_id])
     |> validate_transaction_rules()
   end
 
   defp validate_transaction_rules(changeset) do
-    value = get_change(changeset, :value)
+    value_in_cents = get_change(changeset, :value_in_cents)
     changeset =
-      if value && value <= 0 do
-        add_error(changeset, :value, "Must to be positive")
+      if value_in_cents && value_in_cents <= 0 do
+        add_error(changeset, :value_in_cents, "Must to be positive")
       else
         changeset
       end
@@ -39,10 +39,12 @@ defmodule Banking.BankTransactions.Transaction do
 
     user_from_id = get_change(changeset, :user_from_id)
     user_to_id = get_change(changeset, :user_to_id)
-    if (transaction_type == 1 && user_from_id == user_to_id) do
-      add_error(changeset, :user_to, "Must be diferent")
-    else
-      changeset
+
+    cond do
+      transaction_type == 1 && user_from_id == user_to_id ->
+        add_error(changeset, :user_to, "Can not be yourself")
+      true ->
+        changeset
     end
   end
 end
