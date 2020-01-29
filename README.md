@@ -56,7 +56,7 @@ Now you can use the API on [`localhost:4000`](http://localhost:4000).
     * Response(Success):
     ```json
       {
-        "balance": 1000,
+        "balance_in_cents": 1000,
         "email": "ataide.neto31@gmail.com",
         "id": 1,
         "username": "ataideal"
@@ -90,7 +90,7 @@ Now you can use the API on [`localhost:4000`](http://localhost:4000).
       {
         "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJiYW5raW5nIiwiZXhwIjoxNTc4Mzk5NTUxLCJpYXQiOjE1NzU5ODAzNTEsImlzcyI6ImJhbmtpbmciLCJqdGkiOiI1YThkMThhMC02YTNhLTQxNTYtYTE1My03OWJlMDU5MWQzNTkiLCJuYmYiOjE1NzU5ODAzNTAsInN1YiI6IjEiLCJ0eXAiOiJhY2Nlc3MifQ.1wgdaMv-HqG-5LuvO_OSRJbEeBvvrBMUG_AuFWkhOoYxvUhCO7oUDaRVBxXwxqGyMyIBEWjm-mEoMack8aTiQQ",
         "user": {
-          "balance": 1000,
+          "balance_in_cents": 1000,
           "email": "ataide.neto31@gmail.com",
           "id": 1,
           "username": "ataideal"
@@ -113,7 +113,7 @@ Now you can use the API on [`localhost:4000`](http://localhost:4000).
     * Body params:
     ```json
     {
-    	"value": 100
+    	"value_in_cents": 100
     }
     ```
 
@@ -123,13 +123,13 @@ Now you can use the API on [`localhost:4000`](http://localhost:4000).
         "id": 1,
         "transaction_type": "Withdraw",
         "user_from": {
-            "balance": 900,
+            "balance_in_cents": 900,
             "email": "ataide.neto31@gmail.com",
             "id": 1,
             "username": "ataideal"
         },
         "user_to": null,
-        "value": 100
+        "value_in_cents": 100
       }
     ```
 
@@ -147,7 +147,7 @@ Now you can use the API on [`localhost:4000`](http://localhost:4000).
     * Body params:
     ```json
     {
-    	"value": 100,
+    	"value_in_cents": 100,
     	"username": "ataideal"
     }
     ```
@@ -158,18 +158,18 @@ Now you can use the API on [`localhost:4000`](http://localhost:4000).
         "id": 3,
         "transaction_type": "Transfer",
         "user_from": {
-            "balance": 800,
+            "balance_in_cents": 800,
             "email": "ataide.neto31@gmail.com",
             "id": 1,
             "username": "ataideal"
         },
         "user_to": {
-            "balance": 1100,
+            "balance_in_cents": 1100,
             "email": "ataide.neto31@gmail.com",
             "id": 3,
             "username": "ataideal1"
         },
-        "value": 100
+        "value_in_cents": 100
     }
     ```
 
@@ -187,7 +187,7 @@ Now you can use the API on [`localhost:4000`](http://localhost:4000).
             "user_to": [
                 "Must be diferent"
             ],
-            "value": [
+            "value_in_cents": [
                 "Must to be positive"
             ]
         }
