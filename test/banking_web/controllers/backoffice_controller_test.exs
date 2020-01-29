@@ -1,8 +1,8 @@
 defmodule BankingWeb.BackofficeControllerTest do
   use BankingWeb.ConnCase
 
-  alias Banking.UserManager
   alias Banking.BankTransactions
+  alias Banking.UserManager
 
   @valid_attrs_user %{email: "some@email.com", password: "some password", username: "some username"}
 
@@ -13,7 +13,7 @@ defmodule BankingWeb.BackofficeControllerTest do
       transactions = [%{value_in_cents: 1000, user_from_id: user.id, transaction_type: 0},
                       %{value_in_cents: 2452, user_from_id: user.id, transaction_type: 0}]
 
-      [{:ok, transaction1},{:ok, transaction2}] = Enum.map(transactions, &BankTransactions.create_transaction(&1))
+      [{:ok, transaction1}, {:ok, transaction2}] = Enum.map(transactions, &BankTransactions.create_transaction(&1))
 
       params = %{}
 
@@ -35,7 +35,7 @@ defmodule BankingWeb.BackofficeControllerTest do
       transactions = [%{value_in_cents: 1000, user_from_id: user.id, transaction_type: 0},
                       %{value_in_cents: 2452, user_from_id: user.id, transaction_type: 0}]
 
-      [{:ok, transaction1},{:ok, transaction2}] = Enum.map(transactions, &BankTransactions.create_transaction(&1))
+      [{:ok, transaction1}, {:ok, transaction2}] = Enum.map(transactions, &BankTransactions.create_transaction(&1))
 
       params = %{"group" => "year"}
 
@@ -59,7 +59,7 @@ defmodule BankingWeb.BackofficeControllerTest do
       transactions = [%{value_in_cents: 1000, user_from_id: user.id, transaction_type: 0},
                       %{value_in_cents: 2452, user_from_id: user.id, transaction_type: 0}]
 
-      [{:ok, transaction1},{:ok, transaction2}] = Enum.map(transactions, &BankTransactions.create_transaction(&1))
+      [{:ok, transaction1}, {:ok, transaction2}] = Enum.map(transactions, &BankTransactions.create_transaction(&1))
 
       params = %{"group" => "month"}
 
@@ -84,7 +84,7 @@ defmodule BankingWeb.BackofficeControllerTest do
       transactions = [%{value_in_cents: 1000, user_from_id: user.id, transaction_type: 0},
                       %{value_in_cents: 2452, user_from_id: user.id, transaction_type: 0}]
 
-      [{:ok, transaction1},{:ok, transaction2}] = Enum.map(transactions, &BankTransactions.create_transaction(&1))
+      [{:ok, transaction1}, {:ok, transaction2}] = Enum.map(transactions, &BankTransactions.create_transaction(&1))
 
       params = %{"group" => "day"}
 

@@ -6,7 +6,7 @@ defmodule Banking.BackofficeTest do
 
   describe "backoffice" do
 
-    @valid_attrs_transaction %{transaction_type: 0, value_in_cents: 12050}
+    @valid_attrs_transaction %{transaction_type: 0, value_in_cents: 12_050}
     @valid_attrs_user %{email: "some@email.com", password: "some password", username: "some username"}
 
     def transaction_fixture(attrs \\ %{}) do

@@ -13,9 +13,8 @@ services:
       # Variables to connect to our Postgres server
       PGUSER: postgres
       PGPASSWORD: postgres
-      PGDATABASE: banking
+      PGDATABASE: banking_dev
       PGPORT: 5432
-      # Hostname of our Postgres container
       PGHOST: db
     ports:
       # Mapping the port to make the Phoenix app accessible outside of the container
@@ -23,6 +22,8 @@ services:
     depends_on:
       # The db container needs to be started before we start this container
       - db
+    networks:
+      - banking-network
   db:
     # We use the predefined Postgres image
     image: postgres:9.6
@@ -33,8 +34,16 @@ services:
       # Set a path where Postgres should store the data
       PGDATA: /var/lib/postgresql/data/pgdata
     restart: always
+    ports:
+    - "2345:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - banking-network
 # Define the volumes
 volumes:
   pgdata:
+
+networks:
+  banking-network:
+    driver: bridge

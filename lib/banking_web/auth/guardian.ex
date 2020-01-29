@@ -1,4 +1,8 @@
 defmodule Banking.Guardian do
+  @moduledoc """
+  Guardian implementation module.
+  Generate token claims and verify claims to authentication 
+  """
   use Guardian, otp_app: :banking
 
   alias Banking.UserManager

@@ -1,8 +1,8 @@
 defmodule BankingWeb.TransactionControllerTest do
   use BankingWeb.ConnCase
 
-  alias Banking.UserManager
   alias Banking.BankTransactions
+  alias Banking.UserManager
 
   @valid_attrs_user %{email: "some@email.com", password: "some password", username: "some username"}
   @valid_attrs_transaction %{value_in_cents: 1000}

@@ -2,8 +2,9 @@
 # Docker entrypoint script.
 
 # Wait until Postgres is ready
-while ! pg_isready -q -h $PGHOST -p $PGPORT -U $PGUSER
+while ! pg_isready -q -p $PGPORT -h $PGHOST -U $PGUSER
 do
+  echo "pg_isready -q -p $PGPORT -h $PGHOST -U $PGUSER"
   echo "$(date) - waiting for database to start"
   sleep 2
 done

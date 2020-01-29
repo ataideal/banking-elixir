@@ -9,7 +9,6 @@ defmodule BankingWeb.Router do
     plug Banking.AuthPipeline
   end
 
-
   scope "/api" do
     pipe_through :api
     scope "/auth", BankingWeb do

@@ -1,13 +1,14 @@
 defmodule Banking.UserManagerTest do
   use Banking.DataCase
 
-  alias Banking.UserManager
   alias Argon2
+  alias Banking.UserManager
+
   describe "users" do
     alias Banking.UserManager.User
 
     @valid_attrs %{email: "some@email.com", password: "some password", username: "some username"}
-    @update_attrs %{balance_in_cents: 45670, email: "some_updated@email.com", password: "some updated password", username: "some updated username"}
+    @update_attrs %{balance_in_cents: 45_670, email: "some_updated@email.com", password: "some updated password", username: "some updated username"}
     @invalid_attrs %{balance_in_cents: -1, email: "some@email.com", password: "some password", username: "some username"}
 
     def user_fixture(attrs \\ %{}) do
@@ -31,7 +32,7 @@ defmodule Banking.UserManagerTest do
 
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = UserManager.create_user(@valid_attrs)
-      assert user.balance_in_cents == 100000
+      assert user.balance_in_cents == 100_000
       assert user.email == @valid_attrs.email
       assert Argon2.verify_pass(@valid_attrs.password, user.password)
       assert user.username == @valid_attrs.username
@@ -68,7 +69,8 @@ defmodule Banking.UserManagerTest do
 
     test "authenticate_user/2 authenticate with valid credentials" do
       {:ok, user} =  UserManager.create_user(@valid_attrs)
-      assert {:ok, token, user_authenticated} = UserManager.authenticate_user(@valid_attrs.username, @valid_attrs.password)
+      assert {:ok, token, user_authenticated} =
+        UserManager.authenticate_user(@valid_attrs.username, @valid_attrs.password)
       assert user_authenticated.username == user.username
       assert user_authenticated.email == user.email
       assert user_authenticated.balance_in_cents == user.balance_in_cents

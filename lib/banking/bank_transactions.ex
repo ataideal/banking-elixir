@@ -40,23 +40,28 @@ defmodule Banking.BankTransactions do
 
   """
 
-  def get_last_transaction() do
+  def get_last_transaction do
     from(t in Transaction, limit: 1, order_by: [desc: t.id]) |> Repo.one
   end
 
   def create_transaction(attrs \\ %{}) do
     Repo.transaction(fn ->
-      with {:ok, transaction} <- %Transaction{}|> Transaction.changeset(attrs)|> Repo.insert() do
-        transaction = Repo.preload(transaction, [:user_from, :user_to])
-        case transaction.transaction_type do
-          0 -> withdraw_money(transaction)
-          1 -> transfer_money(transaction)
-        end
-        Repo.preload(transaction, [:user_from, :user_to], [force: true])
-      else
-        {:error, changeset} -> transaction_errors(changeset) |> Repo.rollback()
+      case  %Transaction{} |> Transaction.changeset(attrs)|> Repo.insert() do
+        {:ok, transaction} ->
+          transaction = Repo.preload(transaction, [:user_from, :user_to])
+          handle_transaction_type(transaction)
+          Repo.preload(transaction, [:user_from, :user_to], [force: true])
+      {:error, changeset} ->
+        transaction_errors(changeset) |> Repo.rollback()
       end
     end)
+  end
+
+  defp handle_transaction_type(transaction) do
+    case transaction.transaction_type do
+      0 -> withdraw_money(transaction)
+      1 -> transfer_money(transaction)
+    end
   end
 
   defp withdraw_money(transaction) do

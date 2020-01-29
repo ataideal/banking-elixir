@@ -15,7 +15,7 @@ defmodule BankingWeb.AuthenticationControllerTest do
         |> json_response(200)
 
       expected_user = %{
-        "balance_in_cents" => 100000,
+        "balance_in_cents" => 100_000,
         "email" => @valid_attrs_user.email,
         "id" => user.id,
         "username" => @valid_attrs_user.username

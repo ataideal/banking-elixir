@@ -7,11 +7,9 @@ defmodule Banking.BankTransactionsTest do
   describe "transactions" do
     alias Banking.BankTransactions.Transaction
 
-    @valid_attrs %{transaction_type: 0, value_in_cents: 12050}
+    @valid_attrs %{transaction_type: 0, value_in_cents: 12_050}
     @invalid_attrs %{transaction_type: 10, value_in_cents: -1}
-
     @valid_attrs_user %{email: "some@email.com", password: "some password", username: "some username"}
-
 
     def transaction_fixture(attrs \\ %{}) do
       {:ok, transaction} =
@@ -58,7 +56,7 @@ defmodule Banking.BankTransactionsTest do
         |> BankTransactions.create_transaction()
 
       assert transaction.transaction_type == 1
-      assert transaction.value_in_cents == 12050
+      assert transaction.value_in_cents == 12_050
       assert transaction.user_from.balance_in_cents == user_from.balance_in_cents - transaction.value_in_cents
       assert transaction.user_to.balance_in_cents == user_to.balance_in_cents + transaction.value_in_cents
     end
@@ -66,7 +64,7 @@ defmodule Banking.BankTransactionsTest do
     test "create_transaction/1 withdraw transaction_type without enough money" do
       user_from = user_fixture(%{username: "user_from"})
       assert {:error, "User without funds"} =
-        Enum.into(%{user_from_id: user_from.id, value_in_cents: 100001}, @valid_attrs)
+        Enum.into(%{user_from_id: user_from.id, value_in_cents: 100_001}, @valid_attrs)
         |> BankTransactions.create_transaction()
     end
 

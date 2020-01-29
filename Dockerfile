@@ -9,16 +9,10 @@ RUN mkdir /app
 COPY . /app
 WORKDIR /app
 
-# Install hex package manager
-RUN mix local.hex --force
-
-# Force install rebar
-RUN mix local.rebar --force
-
-# Force install rebar
-RUN mix deps.get
-
-# Compile the project
-RUN mix do compile
+# Install hex package manager, install rebar, deps get and compile
+RUN mix local.hex --force && \
+  mix local.rebar --force && \
+  mix deps.get && \
+  mix do compile
 
 CMD ["/app/entrypoint.sh"]

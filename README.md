@@ -4,6 +4,7 @@
 
   * Make sure you have `docker` and `docker-compose` installed.
   * Open the terminal and go to project's root folder.
+  * Run `chmod +x entrypoint.sh`
   * Run on terminal `docker-compose build`.
   * Make sure you're not running process on port `5432`(postgres) or `4000`(phoenix).
   * and then `docker-compose up`.
@@ -30,7 +31,7 @@ Now you can use the API on [`localhost:4000`](http://localhost:4000).
 Now you can use the API on [`localhost:4000`](http://localhost:4000).
 
 ## API Docs:
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/9cb38f44f42b04feae08#?env%5Bbanking-heroku%5D=W3sia2V5IjoiaG9zdCIsInZhbHVlIjoiaHR0cHM6Ly9lbGl4aXItYmFuay5oZXJva3VhcHAuY29tIiwiZGVzY3JpcHRpb24iOiIiLCJ0eXBlIjoidGV4dCIsImVuYWJsZWQiOnRydWV9LHsia2V5IjoidG9rZW4iLCJ2YWx1ZSI6IiIsImRlc2NyaXB0aW9uIjoiIiwidHlwZSI6InRleHQiLCJlbmFibGVkIjp0cnVlfV0=)
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/9cb38f44f42b04feae08#?env%5Bbanking%5D=W3sia2V5IjoiaG9zdCIsInZhbHVlIjoibG9jYWxob3N0OjQwMDAiLCJkZXNjcmlwdGlvbiI6IiIsImVuYWJsZWQiOnRydWV9LHsia2V5IjoidG9rZW4iLCJ2YWx1ZSI6IiIsImRlc2NyaXB0aW9uIjoiIiwiZW5hYmxlZCI6dHJ1ZX1d)
 
   * You can import the Postman's collection with the link above or access the published version [`here`](https://documenter.getpostman.com/view/2488938/SWE6byNF).
 

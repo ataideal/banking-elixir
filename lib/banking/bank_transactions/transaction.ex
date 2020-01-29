@@ -1,4 +1,7 @@
 defmodule Banking.BankTransactions.Transaction do
+  @moduledoc """
+  Transaction model
+  """
   use Ecto.Schema
   import Ecto.Changeset
   alias Banking.UserManager.User
@@ -31,20 +34,19 @@ defmodule Banking.BankTransactions.Transaction do
 
     transaction_type = get_change(changeset, :transaction_type)
     changeset =
-      if not Enum.member?(0..1, transaction_type) do
-        add_error(changeset, :transaction_type, "Must be valid")
-      else
+      if Enum.member?(0..1, transaction_type) do
         changeset
+      else
+        add_error(changeset, :transaction_type, "Must be valid")
       end
 
     user_from_id = get_change(changeset, :user_from_id)
     user_to_id = get_change(changeset, :user_to_id)
 
-    cond do
-      transaction_type == 1 && user_from_id == user_to_id ->
+    if transaction_type == 1 && user_from_id == user_to_id do
         add_error(changeset, :user_to, "Can not be yourself")
-      true ->
-        changeset
+    else
+      changeset
     end
   end
 end

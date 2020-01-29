@@ -49,10 +49,11 @@ config :phoenix, :plug_init_mode, :runtime
 
 # Configure your database
 config :banking, Banking.Repo,
-  username: "d0zero",
-  password: "",
-  database: "banking_dev",
-  hostname: "localhost",
+  username: System.get_env("PGUSER"),
+  password: System.get_env("PGPASSWORD"),
+  port: System.get_env("PGPORT"),
+  database: System.get_env("PGDATABASE"),
+  hostname: System.get_env("PGHOST"),
   pool_size: 10
 
 

@@ -2,7 +2,7 @@ defmodule BankingWeb.TransactionView do
   use BankingWeb, :view
   alias BankingWeb.UserView
 
-  def render("transaction.json",%{transaction: transaction}) do
+  def render("transaction.json", %{transaction: transaction}) do
     %{
       id: transaction.id,
       value_in_cents: transaction.value_in_cents,

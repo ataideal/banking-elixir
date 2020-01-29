@@ -9,8 +9,8 @@ defmodule Banking do
 
   import Ecto.Query, warn: false
 
-  alias Banking.Repo
   alias Banking.BankTransactions.Transaction
+  alias Banking.Repo
 
   @doc """
   Query transactions backoffice by group
@@ -42,31 +42,31 @@ defmodule Banking do
   def transactions_by_group("day"), do: Repo.all(transactions_by_day())
   def transactions_by_group(_), do: Repo.all(transactions_all_time())
 
-  defp transactions_by_month() do
+  defp transactions_by_month do
     from t in Transaction,
     select: %{total_transactions: sum(t.value_in_cents),
-              year: fragment("date_part('year', ?)",t.inserted_at),
-              month: fragment("date_part('month', ?)",t.inserted_at)},
+              year: fragment("date_part('year', ?)", t.inserted_at),
+              month: fragment("date_part('month', ?)", t.inserted_at)},
     group_by: [fragment("date_part('month', ?)", t.inserted_at),
               fragment("date_part('year', ?)", t.inserted_at)],
     order_by: [fragment("date_part('year', ?) ASC", t.inserted_at),
               fragment("date_part('month', ?) ASC", t.inserted_at)]
   end
 
-  defp transactions_by_year() do
+  defp transactions_by_year do
     from t in Transaction,
     select: %{total_transactions: sum(t.value_in_cents),
-              year: fragment("date_part('year', ?)",t.inserted_at)},
+              year: fragment("date_part('year', ?)", t.inserted_at)},
     group_by: [fragment("date_part('year', ?)", t.inserted_at)],
     order_by: [fragment("date_part('year', ?) ASC", t.inserted_at)]
   end
 
-  defp transactions_by_day() do
+  defp transactions_by_day do
     from t in Transaction,
     select: %{total_transactions: sum(t.value_in_cents),
-              day: fragment("date_part('day', ?)",t.inserted_at),
-              month: fragment("date_part('month', ?)",t.inserted_at),
-              year: fragment("date_part('year', ?)",t.inserted_at)},
+              day: fragment("date_part('day', ?)", t.inserted_at),
+              month: fragment("date_part('month', ?)", t.inserted_at),
+              year: fragment("date_part('year', ?)", t.inserted_at)},
     group_by: [fragment("date_part('day', ?)", t.inserted_at),
               fragment("date_part('month', ?)", t.inserted_at),
               fragment("date_part('year', ?)", t.inserted_at)],
@@ -75,7 +75,7 @@ defmodule Banking do
               fragment("date_part('day', ?) ASC", t.inserted_at)]
   end
 
-  defp transactions_all_time() do
+  defp transactions_all_time do
     from t in Transaction,
     select: %{total_transactions: sum(t.value_in_cents)}
   end

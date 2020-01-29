@@ -11,10 +11,11 @@ config :logger, level: :warn
 
 # Configure your database
 config :banking, Banking.Repo,
-  username: "d0zero",
-  password: "",
+  username: System.get_env("PGUSER"),
+  password: System.get_env("PGPASSWORD"),
+  port: System.get_env("PGPORT"),
   database: "banking_test",
-  hostname: "localhost",
+  hostname: System.get_env("PGHOST"),
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :banking, Banking.Guardian,

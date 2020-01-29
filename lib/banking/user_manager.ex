@@ -4,9 +4,9 @@ defmodule Banking.UserManager do
   """
 
   import Ecto.Query, warn: false
+  alias Argon2
   alias Banking.Repo
   alias Banking.UserManager.User
-  alias Argon2
 
   @doc """
   Returns the list of users.
@@ -102,12 +102,11 @@ defmodule Banking.UserManager do
     User.changeset(user, %{})
   end
 
-
   def get_user_by_username(username) do
     Repo.get_by(User, username: username)
   end
 
-  def get_last_user() do
+  def get_last_user do
     from(u in User, limit: 1, order_by: [desc: u.id]) |> Repo.one
   end
 
@@ -124,16 +123,16 @@ defmodule Banking.UserManager do
 
   """
   def authenticate_user(username, password) do
-    with %User{} = user <- get_user_by_username(username) do # Get user by username
-      case Argon2.verify_pass(password, user.password) do # Check if password is correct
-        true ->
-          {:ok, token, _} = Banking.Guardian.encode_and_sign(user) # Yes, return the access token
-          {:ok, token, user} # Return token and user after generate token
-        false ->
-          {:error, :unauthorized} # No, return an error
-      end
-    else
-      nil ->
+    case get_user_by_username(username) do # Get user by username
+      %User{} = user ->
+        case Argon2.verify_pass(password, user.password) do # Check if password is correct
+          true ->
+            {:ok, token, _} = Banking.Guardian.encode_and_sign(user) # Yes, return the access token
+            {:ok, token, user} # Return token and user after generate token
+          false ->
+            {:error, :unauthorized} # No, return an error
+        end
+      _ ->
         {:error, :unauthorized} # Return error if username not found
     end
   end
